@@ -1,0 +1,6 @@
+google-genai
+pdf2image
+pydantic
+pypdf2
+pyyaml
+rich
