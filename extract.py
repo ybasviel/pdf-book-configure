@@ -22,18 +22,18 @@ class AuthorInfo:
 """
 @dataclasses.dataclass
 class SubSubSection:
-    title: str
+    chapter_and_title: str
     page: int
 
 @dataclasses.dataclass
 class SubSection:
-    title: str
+    chapter_and_title: str
     page: int
     sub_sub_sections: Optional[list[SubSubSection]]
 
 @dataclasses.dataclass
 class Section:
-    title: str
+    chapter_and_title: str
     page: int
     sub_sections: Optional[list[SubSection]]
 
@@ -83,7 +83,7 @@ def extract_toc_info(save_paths: list[Path]):
     目次情報を抽出する関数
     """
     prompt = """
-画像ファイルはある本の目次ページです。ここから目次を読み取ってください。章と節の階層構造に注意してください。
+画像ファイルはある本の目次ページです。ここから目次(番号とタイトル、ページ番号)を読み取ってください。章と節の階層構造に注意してください。
 """
     return gemini_api_call(save_paths, prompt, list[Section])
 
@@ -108,7 +108,7 @@ def extract_page_img_to_tmp_file(input_pdf_path: Path, page_start: int, page_end
 def section_to_dict(section):
     """Sectionオブジェクトを辞書に変換する関数"""
     result = {
-        "title": section.title,
+        "title": section.chapter_and_title,
         "page": section.page
     }
     
@@ -118,7 +118,7 @@ def section_to_dict(section):
         pass
         
     if hasattr(section, "sub_sub_sections") and section.sub_sub_sections:
-        result["sub_sub_sections"] = [{"title": sub.title, "page": sub.page} for sub in section.sub_sub_sections]
+        result["sub_sub_sections"] = [{"title": sub.chapter_and_title, "page": sub.page} for sub in section.sub_sub_sections]
     else:
         pass
         
